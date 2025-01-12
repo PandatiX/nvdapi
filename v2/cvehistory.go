@@ -14,7 +14,7 @@ type GetCVEHistoryParams struct {
 type EventName string
 
 var (
-	EventCVEReceived         EventName = "CVE Received"
+	EventNewCVEReceived      EventName = "New CVE Received"
 	EventInitialAnalysis     EventName = "Initial Analysis"
 	EventReanalysis          EventName = "Reanalysis"
 	EventCVEModified         EventName = "CVE Modified"

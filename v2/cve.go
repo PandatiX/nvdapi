@@ -5,16 +5,19 @@ import (
 )
 
 type GetCVEsParams struct {
-	CPEName            *string `nvd:"cpeName,omitempty,"`
-	CVEID              *string `nvd:"cveId,omitempty,"`
-	CVSSV2Metrics      *string `nvd:"cvssV2Metrics,omitempty,"`
-	CVSSV2Severity     *string `nvd:"cvssV2Severity,omitempty,"`
-	CVSSV3Metrics      *string `nvd:"cvssV3Metrics,omitempty,"`
-	CVSSV3Severity     *string `nvd:"cvssV3Severity,omitempty,"`
-	CWEID              *string `nvd:"cweId,omitempty,"`
-	HasCertAlerts      *bool   `nvd:"hasCertAlerts,omitempty,noValue"`
-	HasCertNotes       *bool   `nvd:"hasCertNotes,omitempty,noValue"`
-	HasKEV             *bool   `nvd:"hasKev,omitempty,noValue"`
+	CPEName        *string `nvd:"cpeName,omitempty,"`
+	CVEID          *string `nvd:"cveId,omitempty,"`
+	CVSSV2Metrics  *string `nvd:"cvssV2Metrics,omitempty,"`
+	CVSSV2Severity *string `nvd:"cvssV2Severity,omitempty,"`
+	CVSSV3Metrics  *string `nvd:"cvssV3Metrics,omitempty,"`
+	CVSSV3Severity *string `nvd:"cvssV3Severity,omitempty,"`
+	CWEID          *string `nvd:"cweId,omitempty,"`
+	// DEPRECATED as of official technical NIST NVD email (15 nov. 2024)
+	HasCertAlerts *bool `nvd:"hasCertAlerts,omitempty,noValue"`
+	// DEPRECATED as of official technical NIST NVD email (15 nov. 2024)
+	HasCertNotes *bool `nvd:"hasCertNotes,omitempty,noValue"`
+	HasKEV       *bool `nvd:"hasKev,omitempty,noValue"`
+	// DEPRECATED as of official technical NIST NVD email (15 nov. 2024)
 	HasOVAL            *bool   `nvd:"hasOval,omitempty,noValue"`
 	IsVulnerable       *bool   `nvd:"isVulnerable,omitempty,noValue"`
 	KeywordExactMatch  *bool   `nvd:"keywordExactMatch,omitempty,noValue"`
@@ -76,6 +79,7 @@ type (
 		Weaknesses            []Weakness      `json:"weaknesses,omitempty"`
 		Configurations        []Config        `json:"configurations,omitempty"`
 		VendorComments        []VendorComment `json:"vendorComments,omitempty"`
+		CVETags               []string        `json:"cveTags,omitempty"`
 	}
 
 	LangString struct {
@@ -90,6 +94,7 @@ type (
 	}
 
 	Metrics struct {
+		CVSSMetricV40 []CVSSMetricV40 `json:"cvssMetricV40,omitempty"`
 		CVSSMetricV31 []CVSSMetricV31 `json:"cvssMetricV31,omitempty"`
 		CVSSMetricV30 []CVSSMetricV30 `json:"cvssMetricV30,omitempty"`
 		CVSSMetricV2  []CVSSMetricV2  `json:"cvssMetricV2,omitempty"`
@@ -123,6 +128,12 @@ type (
 		CVSSData            CVSSV31   `json:"cvssData"`
 		ExploitabilityScore *Subscore `json:"exploitabilityScore,omitempty"`
 		ImpactScore         *Subscore `json:"impactScore,omitempty"`
+	}
+
+	CVSSMetricV40 struct {
+		Source   string   `json:"source"`
+		Type     TypeEnum `json:"type"`
+		CVSSData CVSSV40  `json:"cvssData"`
 	}
 
 	Weakness struct {
@@ -246,6 +257,49 @@ type (
 		ModifiedAvailabilityImpact    *string  `json:"modifiedAvailabilityImpact,omitempty"`
 		EnvironmentalScore            *float64 `json:"environmentalScore,omitempty"`
 		EnvironmentalSeverity         *string  `json:"environmentalSeverity,omitempty"`
+	}
+
+	CVSSV40 struct {
+		Version                           string   `json:"version"`
+		VectorString                      string   `json:"vectorString"`
+		AttackVector                      *string  `json:"attackVector,omitempty"`
+		AttackComplexity                  *string  `json:"attackComplexity,omitempty"`
+		AttackRequirements                *string  `json:"attackRequirements,omitempty"`
+		PrivilegesRequired                *string  `json:"privilegesRequired,omitempty"`
+		UserInteraction                   *string  `json:"userInteraction,omitempty"`
+		VulnConfidentialityImpact         *string  `json:"vulnConfidentialityImpact,omitempty"`
+		VulnIntegrityImpact               *string  `json:"vulnIntegrityImpact,omitempty"`
+		VulnAvailabilityImpact            *string  `json:"vulnAvailabilityImpact,omitempty"`
+		SubConfidentialityImpact          *string  `json:"subConfidentialityImpact,omitempty"`
+		SubIntegrityImpact                *string  `json:"subIntegrityImpact,omitempty"`
+		SubAvailabilityImpact             *string  `json:"subAvailabilityImpact,omitempty"`
+		ExploitMaturity                   *string  `json:"exploitMaturity,omitempty"`
+		ConfidentialityRequirement        *string  `json:"confidentialityRequirement,omitempty"`
+		IntegrityRequirement              *string  `json:"integrityRequirement,omitempty"`
+		AvailabilityRequirement           *string  `json:"availabilityRequirement,omitempty"`
+		ModifiedAttackVector              *string  `json:"modifiedAttackVector,omitempty"`
+		ModifiedAttackComplexity          *string  `json:"modifiedAttackComplexity,omitempty"`
+		ModifiedAttackRequirements        *string  `json:"modifiedAttackRequirements,omitempty"`
+		ModifiedPrivilegesRequired        *string  `json:"modifiedPrivilegesRequired,omitempty"`
+		ModifiedUserInteraction           *string  `json:"modifiedUserInteraction,omitempty"`
+		ModifiedVulnConfidentialityImpact *string  `json:"modifiedVulnConfidentialityImpact,omitempty"`
+		ModifiedVulnIntegrityImpact       *string  `json:"modifiedVulnIntegrityImpact,omitempty"`
+		ModifiedVulnAvailabilityImpact    *string  `json:"modifiedVulnAvailabilityImpact,omitempty"`
+		ModifiedSubConfidentialityImpact  *string  `json:"modifiedSubConfidentialityImpact,omitempty"`
+		ModifiedSubIntegrityImpact        *string  `json:"modifiedSubIntegrityImpact,omitempty"`
+		ModifiedSubAvailabilityImpact     *string  `json:"modifiedSubAvailabilityImpact,omitempty"`
+		Safety                            *string  `json:"Safety,omitempty"`
+		Automatable                       *string  `json:"Automatable,omitempty"`
+		Recovery                          *string  `json:"Recovery,omitempty"`
+		ValueDensity                      *string  `json:"valueDensity,omitempty"`
+		VulnerabilityResponseEffort       *string  `json:"vulnerabilityResponseEffort,omitempty"`
+		ProviderUrgency                   *string  `json:"providerUrgency,omitempty"`
+		BaseScore                         float64  `json:"baseScore"`
+		BaseSeverity                      string   `json:"baseSeverity"`
+		ThreatScore                       *float64 `json:"threatScore,omitempty"`
+		ThreatSeverity                    *string  `json:"threatSeverity,omitempty"`
+		EnvironmentalScore                *float64 `json:"environmentalScore,omitempty"`
+		EnvironmentalSeverity             *string  `json:"environmentalSeverity,omitempty"`
 	}
 
 	TypeEnum     string
